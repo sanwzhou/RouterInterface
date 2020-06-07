@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>RouterInterface</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.2"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
+    <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
+    
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         {  }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+    font-size: 16pt;
+    color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+    margin-left: 10px;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+    margin-left: 10px;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+    margin-left: 10px;
+}
+#header_row {
+    font-weight: bold;
+    color: #606060;
+    background-color: #f5f5f5;
+    border-top-width: 10px;
+    border-color: #d6e9c6;
+    font-size: 12px;
+}
+#result_table td {
+    border: 1px solid #f5f5f5;
+    padding: 2px;
+
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #d6e9c6; }
+.failClass  { background-color: #faebcc; }
+.errorClass { background-color: #ebccd1; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+/* -- chars ---------------------------------------------------------------------- */
+.testChars {margin-left: 150px;}
+
+.btn-info1 {
+    color: #fff;
+    background-color: #d6e9c6;
+    border-color: #d6e9c6;
+}
+
+.btn-info2 {
+    color: #fff;
+    background-color: #faebcc;
+    border-color: #faebcc;
+}
+
+.btn-info3 {
+    color: #fff;
+    background-color: #ebccd1;
+    border-color: #ebccd1;
+}
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript"><!--
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+/* obsoleted by detail in <div>
+function showOutput(id, name) {
+    var w = window.open("", //url
+                    name,
+                    "resizable,scrollbars,status,width=800,height=450");
+    d = w.document;
+    d.write("<pre>");
+    d.write(html_escape(output_list[id]));
+    d.write("\n");
+    d.write("<a href='javascript:window.close()'>close</a>\n");
+    d.write("</pre>\n");
+    d.close();
+}
+*/
+--></script>
+
+<div class='heading'>
+<h1>RouterInterface</h1>
+<p class='attribute'><strong>Start Time:</strong> 2020-06-07 18:20:23</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:00.611368</p>
+<p class='attribute'><strong>Status:</strong> Pass 9</p>
+
+<p class='description'>用例执行情况：</p>
+</div>
+
+<div style="float:left; margin-left: 10px;">
+    <p> Test Case Pie charts </p>
+    <a class="btn btn-xs btn-info1">-Pass-</a><br>
+    <a class="btn btn-xs btn-info2">-Faild-</a><br>
+    <a class="btn btn-xs btn-info3">-Error-</a><br>
+</div>
+
+<div class="testChars">
+    <canvas id="myChart" width="250" height="250"></canvas>
+</div>
+
+
+
+<p id='show_detail_line' style="margin-left: 10px;">Show
+<a href='javascript:showCase(0)' class="btn btn-xs btn-primary">Summary</a>
+<a href='javascript:showCase(1)' class="btn btn-xs btn-danger">Failed</a>
+<a href='javascript:showCase(2)' class="btn btn-xs btn-info">All</a>
+</p>
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row' class="panel-title">
+    <td>Test Group/Test case</td>
+    <td>Count</td>
+    <td>Pass</td>
+    <td>Fail</td>
+    <td>Error</td>
+    <td>View</td>
+</tr>
+
+<tr class='passClass'>
+    <td>run_main.RunMain</td>
+    <td>9</td>
+    <td>9</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c1',9)">Detail</a></td>
+</tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_1___router_001____登录_正例____yes___None__None___action_login____post______username___admin___password___admin______write____no____text____var_time_0_var_leftPwdNums_0_____通过____var_time_0_var_leftPwdNums_0__n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_2___router_002____登录_反例_错误账号密码____yes___None__None___action_login____post______username___test002___password___test002______no____no____text____var_time_0_var_leftPwdNums_____通过____var_time_0_var_leftPwdNums_9___n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_3___router_003____登录_反例_账号为空____yes___None__None___action_login____post______username______password___admin______no____no____text____var_time_0_var_leftPwdNums_____通过____var_time_0_var_leftPwdNums_8___n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_4___router_004____登录_反例_密码为空____yes___None__None___action_login____post______username___admin___password_________no____no____text____var_time_0_var_leftPwdNums_____通过____var_time_0_var_leftPwdNums_7___n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.5' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_5___router_005____登陆后_访问主页面____yes___None__None___index_html____get___None___yes____yes____text____请允许浏览器使用javascript____通过______DOCTYPE_html__n_html_lang__en___n_head__n___meta_charset__UTF_8___n___meta_name__renderer__content__webkit___n___title____title__n___link_rel__stylesheet__href____libs_css_bootstrap_min_css___n___link_rel__stylesheet__href____static_css_public_css___n___link_rel__stylesheet__href____static_css_index_css___n___link_rel__stylesheet__href____static_css_iconfont_css___n_t_link_rel__stylesheet__href____static_css_publicDemo_css___n_t_link_rel__stylesheet__href____static_css_zTreeStyle_css___n_t_link_rel__stylesheet__href____static_css_editor_css___n_n_t_link_rel__shortcut_icon__href____noAuth_images_favicon_ico__type__image_x_icon___n_t_script_src___noAuth_noAuthAspOut_asp_optType_lang____script__n_t_script__n_t____if__undefined_____typeof_mobileConf____mobileConf____1__n_t______n_t______tif___phone_pad_pod_iPhone_iPod_ios_iPad_Android_Fennec_BlackBerry_Mobile_IEMobile_MQQBrowser_JUC_Fennec_WosBrowser_BrowserNG_WebOS_Symbian_Windows_Phone_i_test_navigator_userAgent_____n_t_t_t__window_location_href______noAuth_applogin_html____n_t_t______n_t______n____script__n__head__n_body__n___div_class__u_container_____n_____div_id__header__class__u_c_top___img_id__toplogo__src____alt____class__u_headlogo____div__n_____div_id__main__class__u_c_center_clearfix_____n_______div_id__sidebar__class__u_l_left_main_left____div____n_______div_class__u_l_right_main_right____n_______t_div_id__retract__class__u_retract___i_class__icon_chevron_left____i___div__n_________div_id__path__class__M_B_10____div__n_________div_id__content____div__n________div__n______div__n_____div_id__footer____n______div___n____div____n___noscript_class__noscript___n____请允许浏览器使用javascript_n____noscript__n___script_src____libs_js_sea_js____script__n___script_src____libs_js_jquery_2_1_1_min_js____script__n___script_src____static_js_index_js____script__n_n__body__n__html__n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.6' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_6___router_006____注销____no___None__None___action_logout____post___None___yes____no____text___None__None__None_</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.7' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_7___router_007____地址组_新增____yes___None__None___goform_formIpGroupConfig____post______groupName___1___groupNameOld______groupType___groupAddr___groupTypeOld______temp1___1_1_1_1_1_1_1_1___Action___add______yes____no____text____var_status_1_____通过____var_status_1__n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.8' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_8___router_008____地址组_查询____yes___None__None___common_asp____get______optType___addrGroup______yes____no____text____groupNames_0_____1__ipEntrynum_0__10_groupType_0___ipgroup__groupContent_0___P_1_1_1_1_1_1_1_1___var_errorstr____var_totalrecs_1_____通过____var_groupNames_new_Array___var_groupType_new_Array___var_ipEntrynum_new_Array___var_userEntrynum_new_Array___var_groupContent_new_Array___var_totalrecs__ngroupNames_0_____1__ipEntrynum_0__10_groupType_0___ipgroup__groupContent_0___P_1_1_1_1_1_1_1_1___var_errorstr____var_totalrecs_1_var_max_totalrecs__32_PPPoEFlag___1_WebAuthFlag___1___n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='pt1.9' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_run_Main_9___router_009____地址组_删除____yes___None__None___goform_formIpGroupListDel____post______delstr___1______yes____no____text____var_status_1_____通过____var_status_1__n__</div></td>
+    <td colspan='5' align='center'>pass</td>
+</tr>
+
+<tr id='total_row'>
+    <td>Total</td>
+    <td>9</td>
+    <td class="text text-success">9</td>
+    <td class="text text-danger">0</td>
+    <td class="text text-warning">0</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+
+<div id='ending'>&nbsp;</div>
+
+    <script type="text/javascript">
+var data = [
+    {
+        value: 0,
+        color: "#ebccd1",
+        label: "Error",
+        labelColor: 'white',
+        labelFontSize: '16'
+    },
+    {
+        value : 0,
+        color : "#faebcc",
+        label: "Fail",
+        labelColor: 'white',
+        labelFontSize: '16'
+    },
+    {
+        value : 9,
+        color : "#d6e9c6",
+        label : "Pass",
+        labelColor: 'white',
+        labelFontSize: '16'
+    }           
+]
+
+var newopts = {
+     animationSteps: 100,
+        animationEasing: 'easeInOutQuart',
+}
+
+//Get the context of the canvas element we want to select
+var ctx = document.getElementById("myChart").getContext("2d");
+
+var myNewChart = new Chart(ctx).Pie(data,newopts);
+
+</script>
+    
+</body>
+</html>
